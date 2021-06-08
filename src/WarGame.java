@@ -84,6 +84,16 @@ public class WarGame {
             System.out.println(string2);
     }
 
+    public boolean canDraw(Player p1, Player p2){
+        boolean can_draw = true;
+        if (!p1.outOfCards())
+            can_draw = false;
+        if (!p2.outOfCards())
+            can_draw = false;
+        return can_draw;
+
+    }
+
 
 
 
@@ -98,21 +108,22 @@ public class WarGame {
         Player otherPlayer = (currentPlayer != player1 ? player1 : player2);
         int round = 1;
 
-        while(!player1.outOfCards() || !player2.outOfCards()) {
+        while((!player1.outOfCards() && !player2.outOfCards())) {
+            System.out.println(currentPlayer.wonDeck.cards);
+            System.out.println(otherPlayer.wonDeck.cards);
 
-
-            if(!currentPlayer.canDraw() || !otherPlayer.canDraw()){
-                System.out.println("shit happened");
-                break; }
             System.out.println("------------------------- Round number " + round++ + " -------------------------");
             boolean flag = true;
             boolean isWar = false;
 
             while (flag) {
 
-                if(!currentPlayer.canDraw() || !otherPlayer.canDraw()){
-                    System.out.println("shit happened");
-                    break; }
+                if(currentPlayer.outOfCards() || otherPlayer.outOfCards()){
+                    flag = false;
+                    break;
+                }
+                currentPlayer.refillCards();
+                otherPlayer.refillCards();
 
                 firstPlayerCards.add(currentPlayer.drawCard());
                 System.out.println(currentPlayer.name + " drew " + firstPlayerCards.get(firstPlayerCards.size()-1).toString());
@@ -138,10 +149,12 @@ public class WarGame {
                 } else if (comparing == 0) {
                     isWar = true;
                     System.out.println("Starting a war...");
-                    if(!currentPlayer.canDraw() || !otherPlayer.canDraw()){
+                    if(currentPlayer.outOfCards() || otherPlayer.outOfCards()){
                         flag = false;
-                        continue;
+                        break;
                     }
+                    currentPlayer.refillCards();
+                    otherPlayer.refillCards();
                     firstPlayerCards.add(currentPlayer.drawCard());
                     System.out.println(currentPlayer.name + " drew a war card");
                     // System.out.println(currentPlayer.name + " drew " + firstPlayerCards.get(firstPlayerCards.size()-1).toString());
@@ -149,10 +162,12 @@ public class WarGame {
                     System.out.println(otherPlayer.name + " drew a war card");
                     // System.out.println(otherPlayer.name + " drew " + secondPlayerCards.get(secondPlayerCards.size()-1).toString());
 
-                    if(!currentPlayer.canDraw() || !otherPlayer.canDraw()){
+                    if(currentPlayer.outOfCards() || otherPlayer.outOfCards()){
                         flag = false;
-                        continue;
+                        break;
                     }
+                    currentPlayer.refillCards();
+                    otherPlayer.refillCards();
                     firstPlayerCards.add(currentPlayer.drawCard());
                     System.out.println(currentPlayer.name + " drew a war card");
                     secondPlayerCards.add(otherPlayer.drawCard());
