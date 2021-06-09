@@ -1,73 +1,70 @@
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
 
+/**
+ * this class represents the war game
+ * each war game has two players
+ */
 public class WarGame {
-    /**
-     * this class represents the war game
-     * each war game has two players
-     */
     Player player1;
     Player player2;
 
 
+    /**
+     * the constructor of the wargame
+     * initializes the players objects of this war game
+     */
     public WarGame(String name1, String name2){
-        /**
-         * the constructor of the wargame
-         * initializes the players objects of this war game
-         */
         this.player1 = new Player(name1);
         this.player2 = new Player(name2);
     }
 
 
+    /**
+     * returns the player1
+     */
     public Player getPlayer1() {
-        /**
-         * returns the player1
-         */
         return player1;
     }
 
 
+    /**
+     * returns the player2
+     */
     public Player getPlayer2() {
-        /**
-         * returns the player2
-         */
         return player2;
     }
 
-
+    /**
+     * sets player1
+     */
     public void setPlayer1(Player player1) {
-        /**
-         * sets player1
-         */
         this.player1 = player1;
     }
 
 
+    /**
+     * sets player2
+     */
     public void setPlayer2(Player player2) {
-        /**
-         * sets player2
-         */
         this.player2 = player2;
     }
 
 
+    /**
+     * returns the player that should start first
+     * this method calls the comparestr method to find out witch player should start
+     * is used in the initializegame method
+     */
     public Player getfirstPlayer(){
-        /**
-         * returns the player that should start first
-         * this method calls the comparestr method to find out witch player should start
-         * is used in the initializegame method
-         */
         return compareStr(player1.name , player2.name) ? player2 :player1;
     }
 
 
+    /**
+     * this method taked two strings of players names and returns a boolean variable according to whom is bigger
+     * is used in getfirstplayer method
+     */
     public boolean compareStr(String str1, String str2){
-        /**
-         * this method taked two strings of players names and returns a boolean variable according to whom is bigger
-         * is used in getfirstplayer method
-         */
         int iters = str1.length() > str2.length() ? str2.length() : str1.length();
         for(int i=0 ; i< iters ; i++){
             if(str1.charAt(i)>str2.charAt(i))
@@ -79,13 +76,13 @@ public class WarGame {
     }
 
 
+    /**
+     * this method initializes the ga,e
+     * it makes a new object of Deck class and constructs it so it has a full playing cards set
+     * it shuffles the deck and divide it for the players starting from the one that should start first
+     * is used in start method
+     */
     public void initializeGame(){
-        /**
-         * this method initializes the ga,e
-         * it makes a new object of Deck class and constructs it so it has a full playing cards set
-         * it shuffles the deck and divite it for the players starting from the one that should start first
-         * is used in start method
-         */
         System.out.println("Initializing the game...");
         Deck deck = new Deck(true);
         deck.shufffle();
@@ -98,11 +95,11 @@ public class WarGame {
     }
 
 
+    /**
+     * this method is used in the start method
+     * it adds the cards that the players played with and returns them to the winner
+     */
     public void givePlayerCards(Player player,ArrayList<Card> player1_cards,ArrayList<Card> player2_cards){
-        /**
-         * this method is used in the start method
-         * it adds the cards that the players played with and returns them to the winner
-         */
         for(int i=player1_cards.size()-1; i>= 0; i--){
             player.wonDeck.cards.add(player2_cards.get(i));
             player.wonDeck.cards.add(player1_cards.get(i));
@@ -112,17 +109,17 @@ public class WarGame {
     }
 
 
+    /**
+     * this method plays the game
+     * it initializes two arraylists of cards for each player
+     * these arraylists are the deck on the center(the one they play their cards on)
+     * we can change them with a deck instead
+     * but " if it works don"t change it :P "
+     * we check witch player should play first
+     * and starts the game
+     * the game continues as long as both players have cards
+     */
     public String start(){
-        /**
-         * this method plays the game
-         * it initializes two arraylists of cards for each player
-         * these arraylists are the deck on the center(the one they play their cards on)
-         * we can change them with a deck instead
-         * but " if it works don"t change it :P "
-         * we check witch player should play first
-         * and starts the game
-         * the game continues as long as both players have cards
-         */
         ArrayList<Card> firstPlayerCards = new ArrayList<Card>();
         ArrayList<Card> secondPlayerCards = new ArrayList<Card>();
 
@@ -148,11 +145,14 @@ public class WarGame {
                 otherPlayer.refillCards();
 
                 firstPlayerCards.add(currentPlayer.drawCard());
-                System.out.println(currentPlayer.name + " drew " + firstPlayerCards.get(firstPlayerCards.size()-1).toString());
+                System.out.println(currentPlayer.name + " drew " + firstPlayerCards.get
+                        (firstPlayerCards.size()-1).toString());
                 secondPlayerCards.add(otherPlayer.drawCard());
-                System.out.println(otherPlayer.name + " drew " + secondPlayerCards.get(secondPlayerCards.size()-1).toString());
+                System.out.println(otherPlayer.name + " drew " + secondPlayerCards.get
+                        (secondPlayerCards.size()-1).toString());
 
-                int comparing = firstPlayerCards.get(firstPlayerCards.size() - 1).compare(secondPlayerCards.get(secondPlayerCards.size() - 1));
+                int comparing = firstPlayerCards.get(firstPlayerCards.size() - 1)
+                        .compare(secondPlayerCards.get(secondPlayerCards.size() - 1));
 
                 if (comparing == 1) {
                     givePlayerCards(currentPlayer, firstPlayerCards, secondPlayerCards);
