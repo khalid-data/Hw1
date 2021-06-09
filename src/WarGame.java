@@ -3,35 +3,71 @@ import java.util.Collections;
 import java.util.Random;
 
 public class WarGame {
+    /**
+     * this class represents the war game
+     * each war game has two players
+     */
     Player player1;
     Player player2;
 
+
     public WarGame(String name1, String name2){
+        /**
+         * the constructor of the wargame
+         * initializes the players objects of this war game
+         */
         this.player1 = new Player(name1);
         this.player2 = new Player(name2);
     }
 
+
     public Player getPlayer1() {
+        /**
+         * returns the player1
+         */
         return player1;
     }
 
+
     public Player getPlayer2() {
+        /**
+         * returns the player2
+         */
         return player2;
     }
 
+
     public void setPlayer1(Player player1) {
+        /**
+         * sets player1
+         */
         this.player1 = player1;
     }
 
+
     public void setPlayer2(Player player2) {
+        /**
+         * sets player2
+         */
         this.player2 = player2;
     }
 
+
     public Player getfirstPlayer(){
+        /**
+         * returns the player that should start first
+         * this method calls the comparestr method to find out witch player should start
+         * is used in the initializegame method
+         */
         return compareStr(player1.name , player2.name) ? player2 :player1;
     }
 
+
     public boolean compareStr(String str1, String str2){
+        /**
+         * this method taked two strings of players names and returns a boolean variable according to whom is bigger
+         * is used in getfirstplayer method
+         */
         int iters = str1.length() > str2.length() ? str2.length() : str1.length();
         for(int i=0 ; i< iters ; i++){
             if(str1.charAt(i)>str2.charAt(i))
@@ -42,7 +78,14 @@ public class WarGame {
         return str1.length() > str2.length();
     }
 
+
     public void initializeGame(){
+        /**
+         * this method initializes the ga,e
+         * it makes a new object of Deck class and constructs it so it has a full playing cards set
+         * it shuffles the deck and divite it for the players starting from the one that should start first
+         * is used in start method
+         */
         System.out.println("Initializing the game...");
         Deck deck = new Deck(true);
         deck.shufffle();
@@ -54,51 +97,32 @@ public class WarGame {
         }
     }
 
-    public void give_player_cards(Player player,ArrayList<Card> p1_cards,ArrayList<Card> p2_cards){//change
-        //I know for a fact that p1_cards belong to the first.
-        for(int i=p1_cards.size()-1; i>= 0; i--){
-            player.wonDeck.cards.add(p2_cards.get(i));
-            player.wonDeck.cards.add(p1_cards.get(i));
+
+    public void givePlayerCards(Player player,ArrayList<Card> player1_cards,ArrayList<Card> player2_cards){
+        /**
+         * this method is used in the start method
+         * it adds the cards that the players played with and returns them to the winner
+         */
+        for(int i=player1_cards.size()-1; i>= 0; i--){
+            player.wonDeck.cards.add(player2_cards.get(i));
+            player.wonDeck.cards.add(player1_cards.get(i));
         }
-        p1_cards.clear();
-        p2_cards.clear();
+        player1_cards.clear();
+        player2_cards.clear();
     }
-
-    public String drawCard(Player player, ArrayList<Card> cards,boolean inWar){
-        Card card = player.drawCard();
-        cards.add(card);
-        if(!inWar)
-            return player.name + " drew " + cards.get(cards.size()-1).toString() ;
-        else{
-            return player.name + " drew a war card" ;
-        }
-    }
-
-    public void lexPrintCardDrewing( String string1, String string2){
-        if (string1.charAt(0) > string2.charAt(0)){
-            System.out.println(string2);
-            System.out.println(string1);
-        }
-        else
-            System.out.println(string1);
-            System.out.println(string2);
-    }
-
-    public boolean canDraw(Player p1, Player p2){
-        boolean can_draw = true;
-        if (!p1.outOfCards())
-            can_draw = false;
-        if (!p2.outOfCards())
-            can_draw = false;
-        return can_draw;
-
-    }
-
-
 
 
     public String start(){
-        /// make them from Deck
+        /**
+         * this method plays the game
+         * it initializes two arraylists of cards for each player
+         * these arraylists are the deck on the center(the one they play their cards on)
+         * we can change them with a deck instead
+         * but " if it works don"t change it :P "
+         * we check witch player should play first
+         * and starts the game
+         * the game continues as long as both players have cards
+         */
         ArrayList<Card> firstPlayerCards = new ArrayList<Card>();
         ArrayList<Card> secondPlayerCards = new ArrayList<Card>();
 
@@ -109,8 +133,6 @@ public class WarGame {
         int round = 1;
 
         while((!player1.outOfCards() && !player2.outOfCards())) {
-            System.out.println(currentPlayer.wonDeck.cards);
-            System.out.println(otherPlayer.wonDeck.cards);
 
             System.out.println("------------------------- Round number " + round++ + " -------------------------");
             boolean flag = true;
@@ -133,14 +155,14 @@ public class WarGame {
                 int comparing = firstPlayerCards.get(firstPlayerCards.size() - 1).compare(secondPlayerCards.get(secondPlayerCards.size() - 1));
 
                 if (comparing == 1) {
-                    give_player_cards(currentPlayer, firstPlayerCards, secondPlayerCards);
+                    givePlayerCards(currentPlayer, firstPlayerCards, secondPlayerCards);
                     if(!isWar)
                         System.out.println(currentPlayer.name + " won");
                     else
                         System.out.println(currentPlayer.name + " won the war");
                     flag = false;
                 } else if (comparing == -1) {
-                    give_player_cards(otherPlayer, firstPlayerCards, secondPlayerCards);
+                    givePlayerCards(otherPlayer, firstPlayerCards, secondPlayerCards);
                     if(!isWar)
                         System.out.println(otherPlayer.name + " won");
                     else
@@ -157,10 +179,8 @@ public class WarGame {
                     otherPlayer.refillCards();
                     firstPlayerCards.add(currentPlayer.drawCard());
                     System.out.println(currentPlayer.name + " drew a war card");
-                    // System.out.println(currentPlayer.name + " drew " + firstPlayerCards.get(firstPlayerCards.size()-1).toString());
                     secondPlayerCards.add(otherPlayer.drawCard());
                     System.out.println(otherPlayer.name + " drew a war card");
-                    // System.out.println(otherPlayer.name + " drew " + secondPlayerCards.get(secondPlayerCards.size()-1).toString());
 
                     if(currentPlayer.outOfCards() || otherPlayer.outOfCards()){
                         flag = false;
@@ -174,8 +194,6 @@ public class WarGame {
                     System.out.println(otherPlayer.name + " drew a war card" );
                 }
             }
-           // currentPlayer = (currentPlayer != player1 ? player1 : player2);
-          // otherPlayer = (otherPlayer != player1 ? player1 : player2);
         }
         if (player1.outOfCards())
             return player2.name;
